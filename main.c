@@ -119,46 +119,48 @@ void filled_bingo(int arr[N][N], int number){     //입력받은 number과 같은 수를 
 }
 
 int get_number_byMe(int frm){
- int number1;
- int retry;
+  int number1;
+  int retry;
 
-do{
-    retry=0;
-   if(frm == 0) {       // 0:나
-     printf(">>1~%d 사이의 숫자를 입력하세요: ", N*N);
-     scanf("%d", &number1);
-     if(number1<1 || number1>N*N){     //retry=1이면 입력에러
-     retry=1;
+  do{
+	retry=0;
+    if(frm == 0) {       // 0:나
+    printf(">>1~%d 사이의 숫자를 입력하세요: ", N*N);
+    scanf("%d", &number1);
+    
+	if(number1<1 || number1>N*N){     //retry=1이면 입력에러
+     	retry=1;
      }
-     else{
-    retry=0;
+    else{
+    	retry=0;
      }
- }
-} while(retry ==1);        //retry=1이면 다시 입력해야하므로 do구문으로 돌아감
+ 	}	
+	} while(retry ==1);        //retry=1이면 다시 입력해야하므로 do구문으로 돌아감
 
- printf(">사용자가 '%d'를 선택했습니다. \n", number1);
- return number1;
+ 	printf(">사용자가 '%d'를 선택했습니다. \n", number1);
+ 	return number1;
 }
 
 int get_number_byCo(int frc){
- int number2;
- int retry;
+ 	int number2;
+ 	int retry;
 
-do{
- retry = 0;
- if(frc == 1) {          // 컴퓨터가 입력하는 부분
- number2 = rand() %N*N +1;
- if(number2<1 || number2>N*N){     //retry=1이면 입력에러
-    retry=1;
-  }
- else{
-   retry=0;
-  }
-}
-} while(retry ==1);        //retry=1이면 다시 입력해야하므로 do구문으로 돌아감
+	do{
+ 	retry = 0;
+ 	if(frc == 1) {          // 컴퓨터가 입력하는 부분
+ 		number2 = rand() %N*N +1;
+ 		if(number2<1 || number2>N*N){     //retry=1이면 입력에러
+           retry=1;
+    	}
+    	else{
+   	    retry=0;
+        }
+    }
+	} while(retry ==1);        //retry=1이면 다시 입력해야하므로 do구문으로 돌아감
 
- printf(">컴퓨터가 '%d'를 선택했습니다. \n", number2);
- return number2;
+ 	printf(">컴퓨터가 '%d'를 선택했습니다. \n", number2);
+ 	
+	return number2;
 }
 
 
