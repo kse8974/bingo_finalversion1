@@ -105,12 +105,12 @@ void print_bingo(int arr[N][N]){    // 빙고판 출력하는 함수
    } 
 }
 
-void filled_bingo(int arr[N][N], int number){     //입력받은 number과 같은 수를 -1로 만드는 함수(색칠된 부분) 
+void filled_bingo(int arr[N][N], int number1, number2){     //입력받은 number과 같은 수를 -1로 만드는 함수(색칠된 부분) 
    int x, y;
    
    for(y=0; y<N; y++){ // x,y를 일일이 바꿔가면서 number와 같은지 확인 
       for(x=0; x<N; x++){
-         if(arr[y][x] == number){
+         if(arr[y][x] == number1 || arr[y][x]= number2){
             arr[y][x] = -1;
          }
       }
