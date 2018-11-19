@@ -2,13 +2,14 @@
 #include <stdlib.h>
 #include <time.h>
 #define N 5            // 빙고 크기 N은 기호상수로 조절 가능 
-#define M 3           // 빙고에서 이기는 조건 M은 기호 상수로 조절 가능 
+#define M 2           // 빙고에서 이기는 조건 M은 기호 상수로 조절 가능 
 
 void initialize();
 void set_rand(int*array);
 void swap(int*x, int*y);
 void print_bingo(int arr[N][N]);
-int get_number(int frm);            // 0:USER 1:COM 
+int get_number_byMe(int frm); 			// 0: 사용자 1: 컴퓨터 
+int get_number_byCo(int frc);           // 0: 사용자 1: 컴퓨터 
 void filled_bingo(int arr[N][N], int number);
 int u_count_bingo(int arr[N][N]);
 int c_count_bingo(int arr[N][N]);
@@ -24,7 +25,7 @@ int cbingo[N][N];               //컴퓨터의 빙고판
 /* run this program using the console pauser or add your own getch, system("pause") or input loop */
 
 void main() {
-   int number, uwin, cwin;
+   int number1, number2, uwin, cwin;
    int try_count;
    
    initialize();         //빙고판 초기화
@@ -33,15 +34,15 @@ void main() {
       printf("--<상은이가 만든 빙고판>--\n");
       print_bingo(ubingo);        //사용자 빙고판 출력 
       
-      number = get_number(0); //사용자의 번호 선택 
-      try_count++;
+      number1 = get_number_byMe(0);  //사용자의 번호 선택 
+      number2 = get_number_byCo(1);  //컴퓨터의 번호 선택 
+	  try_count++;
       
-      filled_bingo(ubingo, number);
-      filled_bingo(cbingo, number);
+      filled_bingo(ubingo, number1);
+      filled_bingo(cbingo, number1);
       
-      number = get_number(1);   //컴퓨터의 번호 선택
-      filled_bingo(ubingo, number);
-      filled_bingo(cbingo, number);
+      filled_bingo(ubingo, number2);
+      filled_bingo(cbingo, number2);
       
       uwin = u_count_bingo(ubingo);      // 빙고 완성 확인 
       cwin = c_count_bingo(cbingo);
@@ -105,58 +106,60 @@ void print_bingo(int arr[N][N]){    // 빙고판 출력하는 함수
    } 
 }
 
-void filled_bingo(int arr[N][N], int number1, number2){     //입력받은 number과 같은 수를 -1로 만드는 함수(색칠된 부분) 
+void filled_bingo(int arr[N][N], int number){     //입력받은 number과 같은 수를 -1로 만드는 함수(색칠된 부분) 
    int x, y;
    
    for(y=0; y<N; y++){ // x,y를 일일이 바꿔가면서 number와 같은지 확인 
       for(x=0; x<N; x++){
-         if(arr[y][x] == number1 || arr[y][x]= number2){
+         if(arr[y][x] == number){
             arr[y][x] = -1;
          }
       }
    }      
 }
 
-int get_number(int frm){          // 빙고 번호 입력 선택 
-   int number1, number2;
-   int x, retry;
-   
-   do{
-      retry = 0;
-      if(frm == 0) {                     // 0: 나 1: 컴퓨터 
-         printf(">> 1~25 사이의 숫자를 입력하세요: ");
-         scanf("%d", &number1);
-         if(number1<1 || number1>25){      //retry=1이면 입력에러 다시입력해야함. 
-            retry = 1;
-         }
-         else{
-         	retry = 0;
-		 }
-      }
-      
-      if(retry == 0){				// 여기서 컴퓨터가 입력하는 부분				
-         
-		 number2 = rand() %N*N +1;
-            if(number2 == number1){
-            	retry = 1;				//retry=1이면 입력에러 
-			}
-            else{                         	
-        		retry = 0;
-            }
-         }
-      }
-   while(retry ==1);            // retry=1 이면 다시 입력해야하므로 do구문으로 돌아감.
-      
-   
-   if(frm ==0){
-      printf("> 사용자가 '%d'를 선택했습니다. \n", number1);
-   }
-   else {
-      printf("> 컴퓨터가 '%d'를 선택했습니다.\n \n", number2);
-   }   
-   return number1, number2;
+int get_number_byMe(int frm){
+ int number1;
+ int retry;
+
+do{
+    retry=0;
+   if(frm == 0) {       // 0:나
+     printf(">>1~%d 사이의 숫자를 입력하세요: ", N*N);
+     scanf("%d", &number1);
+     if(number1<1 || number1>N*N){     //retry=1이면 입력에러
+     retry=1;
+     }
+     else{
+    retry=0;
+     }
+ }
+} while(retry ==1);        //retry=1이면 다시 입력해야하므로 do구문으로 돌아감
+
+ printf(">사용자가 '%d'를 선택했습니다. \n", number1);
+ return number1;
 }
 
+int get_number_byCo(int frc){
+ int number2;
+ int retry;
+
+do{
+ retry = 0;
+ if(frc == 1) {          // 컴퓨터가 입력하는 부분
+ number2 = rand() %N*N +1;
+ if(number2<1 || number2>N*N){     //retry=1이면 입력에러
+    retry=1;
+  }
+ else{
+   retry=0;
+  }
+}
+} while(retry ==1);        //retry=1이면 다시 입력해야하므로 do구문으로 돌아감
+
+ printf(">컴퓨터가 '%d'를 선택했습니다. \n", number2);
+ return number2;
+}
 
 
 int u_count_bingo(int arr[N][N]){         // 빙고 테이블이 채운 가로/세로/대각선 줄 수를 계산해서 반환 
