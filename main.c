@@ -14,7 +14,8 @@ void filled_bingo(int arr[N][N], int number);
 int u_count_bingo(int arr[N][N]);
 int c_count_bingo(int arr[N][N]);
 void print_winner(int winner);
- 
+
+int checked[N*N];				//전역변수 	
  
 int ubingo[N][N];               //사용자의 빙고판 = 전역변수    
 int cbingo[N][N];               //컴퓨터의 빙고판 
@@ -126,12 +127,12 @@ void filled_bingo(int arr[N][N], int number){     //입력받은 number과 같은 수를 
 }
 
 int get_number_byMe(int frm){
-  int number1;
-  int retry;
+  int number1;						//내가 입력한 숫자 
+  int i, retry;
 
   do{
-	retry=0;
-    if(frm == 0) {       // 0:나
+	retry = 0;
+    if(frm == 0) {       			// 0:나
     printf(">>1~%d 사이의 숫자를 입력하세요: ", N*N);
     scanf("%d", &number1);
     
@@ -139,7 +140,15 @@ int get_number_byMe(int frm){
      	retry=1;
      }
     else{
-    	retry=0;
+    	for(i=0; i<N*N; i++){
+    		if(checked[i] == number1){
+    			printf("숫자를 다시 입력하세요\n");
+				retry =1;
+			}
+			else{
+			retry=0;
+			}
+		}	
      }
  	}	
 	} while(retry ==1);        //retry=1이면 다시 입력해야하므로 do구문으로 돌아감
@@ -149,7 +158,7 @@ int get_number_byMe(int frm){
 
 int get_number_byCo(int frc){
  	int number2;
- 	int retry;
+ 	int i, retry;
 	int x, y;
     int arr[N][N];
     
@@ -163,9 +172,16 @@ int get_number_byCo(int frc){
            retry=1;
     	}
     	else{
-   	    retry=0;
-        }
-    }
+    		for(i=0; i<N*N; i++){
+    		if(checked[i] == number2){
+    			retry =1;
+    		}
+   	    	else{
+			retry=0;
+			}
+        	}
+    	}
+ 	}
 	} while(retry ==1);        //retry=1이면 다시 입력해야하므로 do구문으로 돌아감
 
  	
