@@ -24,7 +24,9 @@ int cbingo[N][N];               //컴퓨터의 빙고판
 void main() {
    int number1, number2, uwin, cwin;
    int try_count;
-   
+   int x, y;
+   int arr[N][N];
+    
    initialize();         //빙고판 초기화
    
    do{
@@ -32,14 +34,23 @@ void main() {
       print_bingo(ubingo);        //사용자 빙고판 출력 
       
       number1 = get_number_byMe(0);  //사용자의 번호 선택 
-      number2 = get_number_byCo(1);  //컴퓨터의 번호 선택 
-	  try_count++;
-      
       filled_bingo(ubingo, number1);
       filled_bingo(cbingo, number1);
       
-      filled_bingo(ubingo, number2);
-      filled_bingo(cbingo, number2);
+      number2 = get_number_byCo(1);  //컴퓨터의 번호 선택 
+	  
+	  for(y=0; y<N; y++){
+	  	for(x=0; x<N; x++){
+	  		if(arr[y][x] == number1 && arr[y][x] == number2){
+	  			uwin =1;
+			  }
+			else{
+				filled_bingo(ubingo, number2);
+     			filled_bingo(cbingo, number2);
+     			try_count++;
+			}
+		  }
+	  }
       
       uwin = u_count_bingo(ubingo);      // 빙고 완성 확인 
       cwin = c_count_bingo(cbingo);
@@ -145,7 +156,9 @@ int get_number_byCo(int frc){
 	do{
  	retry = 0;
  	if(frc == 1) {          // 컴퓨터가 입력하는 부분
- 		number2 = rand() %N*N +1;
+ 		
+ 		
+		number2 = rand() %N*N +1;
  		if(number2<1 || number2>N*N){     //retry=1이면 입력에러
            retry=1;
     	}
