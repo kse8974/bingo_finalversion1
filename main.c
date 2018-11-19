@@ -14,8 +14,8 @@ void filled_bingo(int arr[N][N], int number);
 int u_count_bingo(int arr[N][N]);
 int c_count_bingo(int arr[N][N]);
 void print_winner(int winner);
-
-
+ 
+ 
 int ubingo[N][N];               //사용자의 빙고판 = 전역변수    
 int cbingo[N][N];               //컴퓨터의 빙고판 
 
@@ -24,8 +24,7 @@ int cbingo[N][N];               //컴퓨터의 빙고판
 void main() {
    int number1, number2, uwin, cwin;
    int try_count;
-   int x, y;
-   int arr[N][N];
+  
     
    initialize();         //빙고판 초기화
    
@@ -33,30 +32,30 @@ void main() {
       printf("--<상은이가 만든 빙고판>--\n");
       print_bingo(ubingo);        //사용자 빙고판 출력 
       
-      number1 = get_number_byMe(0);  //사용자의 번호 선택 
+      number1 = get_number_byMe(0);  //사용자의 번호 선택  
+      number2 = get_number_byCo(1);  //컴퓨터의 번호 선택   
+	  
+	  if(number1 != number2){
+	  
+	  printf(">사용자가 '%d'를 선택했습니다. \n", number1);
+      printf(">컴퓨터가 '%d'를 선택했습니다. \n", number2);
+      
       filled_bingo(ubingo, number1);
       filled_bingo(cbingo, number1);
       
-      number2 = get_number_byCo(1);  //컴퓨터의 번호 선택 
-	  
-	  for(y=0; y<N; y++){
-	  	for(x=0; x<N; x++){
-	  		if(arr[y][x] == number1 && arr[y][x] == number2){
-	  			uwin =1;
-			  }
-			else{
-				filled_bingo(ubingo, number2);
-     			filled_bingo(cbingo, number2);
-     			try_count++;
-			}
-		  }
+      filled_bingo(ubingo, number2);  
+	  filled_bingo(cbingo, number2);
+	  try_count++;  
+		}
+	  else{
+	  	uwin == 1;
+	  	cwin == 1;
+	  	
 	  }
-      
-      uwin = u_count_bingo(ubingo);      // 빙고 완성 확인 
+	  uwin = u_count_bingo(ubingo);      // 빙고 완성 확인 
       cwin = c_count_bingo(cbingo);
 	  
-	  printf("시도 횟수는 %d 입니다\n\n", try_count); 
-	  
+	  printf("시도 횟수는 %d 입니다\n\n", try_count);
    } 
    while((uwin == 0) && (cwin ==0));   //1이 되면 승자가 생기니까 이대로 진행 
    
@@ -144,22 +143,23 @@ int get_number_byMe(int frm){
      }
  	}	
 	} while(retry ==1);        //retry=1이면 다시 입력해야하므로 do구문으로 돌아감
-
- 	printf(">사용자가 '%d'를 선택했습니다. \n", number1);
+ 	
  	return number1;
 }
 
 int get_number_byCo(int frc){
  	int number2;
  	int retry;
-
+	int x, y;
+    int arr[N][N];
+    
 	do{
  	retry = 0;
  	if(frc == 1) {          // 컴퓨터가 입력하는 부분
  		
+		 number2 = rand() %N*N +1;
  		
-		number2 = rand() %N*N +1;
- 		if(number2<1 || number2>N*N){     //retry=1이면 입력에러
+		 if(number2<1 || number2>N*N){     //retry=1이면 입력에러
            retry=1;
     	}
     	else{
@@ -168,7 +168,7 @@ int get_number_byCo(int frc){
     }
 	} while(retry ==1);        //retry=1이면 다시 입력해야하므로 do구문으로 돌아감
 
- 	printf(">컴퓨터가 '%d'를 선택했습니다. \n", number2);
+ 	
  	
 	return number2;
 }
