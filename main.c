@@ -14,10 +14,9 @@ void filled_bingo(int arr[N][N], int number);
 int u_count_bingo(int arr[N][N]);
 int c_count_bingo(int arr[N][N]);
 void print_winner(int winner);
-
-int count = 0;     //=전역변수들  
  
-int checked[N*N];
+ 
+int stored[N*N]; 				// number1과 number2값을 저장해줄 배 열 
 
 int ubingo[N][N];               //사용자의 빙고판 = 전역변수    
 int cbingo[N][N];               //컴퓨터의 빙고판 
@@ -25,6 +24,7 @@ int cbingo[N][N];               //컴퓨터의 빙고판
 void main() {
    int number1, number2, uwin, cwin;
    int try_count;
+   int i=0;
    
    initialize();         //빙고판 초기화
    
@@ -32,23 +32,36 @@ void main() {
       printf("--<상은이가 만든 빙고판>--\n");
       print_bingo(ubingo);        //사용자 빙고판 출력 
       
-     number1 = get_number_byMe(0); //사용자의 번호 선택 
-      number2 = get_number_byCo(1);   //컴퓨터의 번호 선택
+      number1 = get_number_byMe(0); 		//사용자의 번호 선택 
+      number2 = get_number_byCo(1);   		//컴퓨터의 번호 선택
+     
+	 /* number1, number2 값을 저장하는 배열을 만들고 싶었음. 배열에는 순서대로 number1,2 값 저장
+	 저장한 후 다음 number1, number2와 비교하여 같은 수가 없으면 filled_bingo함수 실행
+	 
+      stored[2i] = number1;   				//짝수칸에 number1 값 넣기 
+      stored[2i+1] = number2;   			//홀수칸에 number2 값 넣기 순서상관없이 
+	  
+	  i++;
+	  
+	  */
+	  
+	  try_count++;
       
-      
-     try_count++;
-      
+      if(number1 != number2){				//number1과 number2가 다를 경우 빙고 -1로 채우
       filled_bingo(ubingo, number1);
       filled_bingo(cbingo, number1);
       
       filled_bingo(ubingo, number2);
       filled_bingo(cbingo, number2);
-      
+ 	 }
+      else{									//do 구문을 벗어나지만 않으면 됨
+      	uwin=0; cwin=1; 
+	  }
       uwin = u_count_bingo(ubingo);      // 빙고 완성 확인 
       cwin = c_count_bingo(cbingo);
      
-     printf("시도 횟수는 %d 입니다\n\n", try_count); 
-     
+      printf("시도 횟수는 %d 입니다\n\n", try_count); 
+      
    } 
    while((uwin == 0) && (cwin ==0));   //1이 되면 승자가 생기니까 이대로 진행 
    
@@ -109,7 +122,7 @@ void print_bingo(int arr[N][N]){    // 빙고판 출력하는 함수
 void filled_bingo(int arr[N][N], int number){     //입력받은 number과 같은 수를 -1로 만드는 함수(색칠된 부분) 
    int x, y;
    
-   for(y=0; y<N; y++){ // x,y를 일일이 바꿔가면서 number와 같은지 확인 
+   for(y=0; y<N; y++){							//x,y를 일일이 바꿔가면서 number와 같은지 확인 
       for(x=0; x<N; x++){
          if(arr[y][x] == number){
             arr[y][x] = -1;
@@ -118,7 +131,7 @@ void filled_bingo(int arr[N][N], int number){     //입력받은 number과 같은 수를 
    }      
 }
 
-int get_number_byMe(int frm){
+int get_number_byMe(int frm){					// 내가 입력하는 빙고 숫자
  int number1;
  int retry;
 
@@ -140,15 +153,15 @@ do{
  return number1;
 }
 
-int get_number_byCo(int frc){
+int get_number_byCo(int frc){			//컴퓨터가 입력하는 빙고 숫자
  int number2;
  int retry;
 
 do{
  retry = 0;
- if(frc == 1) {          // 컴퓨터가 입력하는 부분
+ if(frc == 1) {          
  number2 = rand() %N*N +1;
- if(number2<1 || number2>N*N){     //retry=1이면 입력에러
+ if(number2<1 || number2>N*N){ 			    //retry=1이면 입력에러
     retry=1;
   }
  else{
