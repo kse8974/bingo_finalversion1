@@ -15,7 +15,7 @@ int u_count_bingo(int arr[N][N]);
 int c_count_bingo(int arr[N][N]);
 void print_winner(int winner);
 
-int checked[N*N];				//전역변수 	
+int checked[N*N];				//전역변수 - 두번이상 쓰였는지 확인할 수 있게 해주는 변수 
  
 int ubingo[N][N];               //사용자의 빙고판 = 전역변수    
 int cbingo[N][N];               //컴퓨터의 빙고판 
@@ -47,10 +47,11 @@ void main() {
       filled_bingo(ubingo, number2);  
 	  filled_bingo(cbingo, number2);
 	  try_count++;  
-		}
-	  else{
+	}
+	
+	  else{							//number1 = number2 일경우 다시 do반복문으로 돌아감 
 	  	uwin == 1;
-	  	cwin == 1;
+	  	cwin == 0;
 	  	
 	  }
 	  uwin = u_count_bingo(ubingo);      // 빙고 완성 확인 
@@ -128,7 +129,7 @@ void filled_bingo(int arr[N][N], int number){     //입력받은 number과 같은 수를 
 
 int get_number_byMe(int frm){
   int number1;						//내가 입력한 숫자 
-  int i, retry;
+  int x, retry;
 
   do{
 	retry = 0;
@@ -137,54 +138,47 @@ int get_number_byMe(int frm){
     scanf("%d", &number1);
     
 	if(number1<1 || number1>N*N){     //retry=1이면 입력에러
-     	retry=1;
-     }
-    else{
-    	for(i=0; i<N*N; i++){
-    		if(checked[i] == number1){
-    			printf("숫자를 다시 입력하세요\n");
-				retry =1;
-			}
-			else{
-			retry=0;
-			}
-		}	
-     }
- 	}	
-	} while(retry ==1);        //retry=1이면 다시 입력해야하므로 do구문으로 돌아감
+    		printf("숫자를 다시 입력하세요\n");
+			retry =1;
+    	}
+    
+	else{
+		for(x=0; x<N*N; x++){
+			if(checked[x] = number1){			//배열에 number1 저장해놈  
+    			checked[x] == number1 ;
+				retry = 0;		
+        	}	
+ 	}
+	}
+	}
+	} while(retry==1);        //retry=1이면 다시 입력해야하므로 do구문으로 돌아감
+ 	
+
  	
  	return number1;
 }
 
 int get_number_byCo(int frc){
  	int number2;
- 	int i, retry;
-	int x, y;
-    int arr[N][N];
+ 	int y, retry;
     
 	do{
  	retry = 0;
  	if(frc == 1) {          // 컴퓨터가 입력하는 부분
- 		
-		 number2 = rand() %N*N +1;
- 		
-		 if(number2<1 || number2>N*N){     //retry=1이면 입력에러
-           retry=1;
-    	}
-    	else{
-    		for(i=0; i<N*N; i++){
-    		if(checked[i] == number2){
-    			retry =1;
-    		}
-   	    	else{
-			retry=0;
-			}
-        	}
-    	}
- 	}
-	} while(retry ==1);        //retry=1이면 다시 입력해야하므로 do구문으로 돌아감
+ 		number2 = rand() %N*N +1;
+ 		for(y=0; y<N*N; y++){
+ 			if(checked[y] == number2){
+ 				checked[y] = number2;
+			 	retry = 0;
+			 }
+		 } 
+    }
+    else{
+    	retry=1;			//에러가 발생했을 경우 
+	}
+	} 
+	while(retry == 1);        //retry=1이면 다시 입력해야하므로 do구문으로 돌아감
 
- 	
  	
 	return number2;
 }
