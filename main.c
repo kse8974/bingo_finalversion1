@@ -8,56 +8,47 @@ void initialize();
 void set_rand(int*array);
 void swap(int*x, int*y);
 void print_bingo(int arr[N][N]);
-int get_number_byMe(int frm); 			// 0: 사용자 1: 컴퓨터 
-int get_number_byCo(int frc);           // 0: 사용자 1: 컴퓨터 
+int get_number_byCo(int frc);           // 0:USER 1:COM
+int get_number_byMe(int frm);          // 0:USER 1:COM
 void filled_bingo(int arr[N][N], int number);
 int u_count_bingo(int arr[N][N]);
 int c_count_bingo(int arr[N][N]);
 void print_winner(int winner);
 
-int checked[N*N];				//전역변수 - 두번이상 쓰였는지 확인할 수 있게 해주는 변수 
+int count = 0;     //=전역변수들  
  
+int checked[N*N];
+
 int ubingo[N][N];               //사용자의 빙고판 = 전역변수    
 int cbingo[N][N];               //컴퓨터의 빙고판 
-
-/* run this program using the console pauser or add your own getch, system("pause") or input loop */
 
 void main() {
    int number1, number2, uwin, cwin;
    int try_count;
-  
-    
+   
    initialize();         //빙고판 초기화
    
    do{
       printf("--<상은이가 만든 빙고판>--\n");
       print_bingo(ubingo);        //사용자 빙고판 출력 
       
-      number1 = get_number_byMe(0);  //사용자의 번호 선택  
-      number2 = get_number_byCo(1);  //컴퓨터의 번호 선택   
-	  
-	  if(number1 != number2){
-	  
-	  printf(">사용자가 '%d'를 선택했습니다. \n", number1);
-      printf(">컴퓨터가 '%d'를 선택했습니다. \n", number2);
+     number1 = get_number_byMe(0); //사용자의 번호 선택 
+      number2 = get_number_byCo(1);   //컴퓨터의 번호 선택
+      
+      
+     try_count++;
       
       filled_bingo(ubingo, number1);
       filled_bingo(cbingo, number1);
       
-      filled_bingo(ubingo, number2);  
-	  filled_bingo(cbingo, number2);
-	  try_count++;  
-	}
-	
-	  else{							//number1 = number2 일경우 다시 do반복문으로 돌아감 
-	  	uwin == 1;
-	  	cwin == 0;
-	  	
-	  }
-	  uwin = u_count_bingo(ubingo);      // 빙고 완성 확인 
+      filled_bingo(ubingo, number2);
+      filled_bingo(cbingo, number2);
+      
+      uwin = u_count_bingo(ubingo);      // 빙고 완성 확인 
       cwin = c_count_bingo(cbingo);
-	  
-	  printf("시도 횟수는 %d 입니다\n\n", try_count);
+     
+     printf("시도 횟수는 %d 입니다\n\n", try_count); 
+     
    } 
    while((uwin == 0) && (cwin ==0));   //1이 되면 승자가 생기니까 이대로 진행 
    
@@ -104,11 +95,11 @@ void print_bingo(int arr[N][N]){    // 빙고판 출력하는 함수
 
    for(y=0; y<N; y++){
       for(x=0; x<N; x++){
-         if(arr[y][x] != -5){         //거의 대부분 그냥 출력 
+         if(arr[y][x] != 0){         //거의 대부분 그냥 출력 
             printf("%4d ", arr[y][x]);
          }
          else{                     //에러가 발생한 경우 //여기서 에러가 발생한 경우 외에 체크 된 경우에 마킹 출력됨
-            printf("error");
+            printf("-1");
          }
       }
       printf("\n\n");       
@@ -128,59 +119,46 @@ void filled_bingo(int arr[N][N], int number){     //입력받은 number과 같은 수를 
 }
 
 int get_number_byMe(int frm){
-  int number1;						//내가 입력한 숫자 
-  int x, retry;
+ int number1;
+ int retry;
 
-  do{
-	retry = 0;
-    if(frm == 0) {       			// 0:나
-    printf(">>1~%d 사이의 숫자를 입력하세요: ", N*N);
-    scanf("%d", &number1);
-    
-	if(number1<1 || number1>N*N){     //retry=1이면 입력에러
-    		printf("숫자를 다시 입력하세요\n");
-			retry =1;
-    	}
-    
-	else{
-		for(x=0; x<N*N; x++){
-			if(checked[x] = number1){			//배열에 number1 저장해놈  
-    			checked[x] == number1 ;
-				retry = 0;		
-        	}	
- 	}
-	}
-	}
-	} while(retry==1);        //retry=1이면 다시 입력해야하므로 do구문으로 돌아감
- 	
+do{
+    retry=0;
+   if(frm == 0) {       // 0:나
+     printf(">>1~%d 사이의 숫자를 입력하세요: ", N*N);
+     scanf("%d", &number1);
+     if(number1<1 || number1>N*N){     //retry=1이면 입력에러
+     retry=1;
+     }
+     else{
+    retry=0;
+     }
+ }
+} while(retry ==1);        //retry=1이면 다시 입력해야하므로 do구문으로 돌아감
 
- 	
- 	return number1;
+ printf(">사용자가 '%d'를 선택했습니다. \n", number1);
+ return number1;
 }
 
 int get_number_byCo(int frc){
- 	int number2;
- 	int y, retry;
-    
-	do{
- 	retry = 0;
- 	if(frc == 1) {          // 컴퓨터가 입력하는 부분
- 		number2 = rand() %N*N +1;
- 		for(y=0; y<N*N; y++){
- 			if(checked[y] == number2){
- 				checked[y] = number2;
-			 	retry = 0;
-			 }
-		 } 
-    }
-    else{
-    	retry=1;			//에러가 발생했을 경우 
-	}
-	} 
-	while(retry == 1);        //retry=1이면 다시 입력해야하므로 do구문으로 돌아감
+ int number2;
+ int retry;
 
- 	
-	return number2;
+do{
+ retry = 0;
+ if(frc == 1) {          // 컴퓨터가 입력하는 부분
+ number2 = rand() %N*N +1;
+ if(number2<1 || number2>N*N){     //retry=1이면 입력에러
+    retry=1;
+  }
+ else{
+   retry=0;
+  }
+}
+} while(retry ==1);        //retry=1이면 다시 입력해야하므로 do구문으로 돌아감
+
+ printf(">컴퓨터가 '%d'를 선택했습니다. \n", number2);
+ return number2;
 }
 
 
@@ -241,9 +219,9 @@ int c_count_bingo(int arr[N][N]){         // 빙고 테이블이 채운 가로/세로/대각선
       sum = 0;            //각 줄 마다 구해야하므로 sum 초기화 
       for(x=0; x<N; x++){
          sum += arr[y][x];
-		}
+      }
       if(sum == -1*N){
-      	 made_bingo++;
+          made_bingo++;
       }
    } 
    
@@ -255,15 +233,15 @@ int c_count_bingo(int arr[N][N]){         // 빙고 테이블이 채운 가로/세로/대각선
       if(sum == -1*N){
         made_bingo++;
     }
-	}
+   }
    
-   sum = 0;                  		// 대각선은 for구문 밖에서 sum초기화
-   for(x=0; x<N; x++){            	// 대각선 확인 
+   sum = 0;                        // 대각선은 for구문 밖에서 sum초기화
+   for(x=0; x<N; x++){               // 대각선 확인 
         sum += arr[x][x];
     } 
    if(sum == -1*N){
-    	made_bingo++;
-	}
+       made_bingo++;
+   }
    
    sum =0;
    for(x=0; x<N; x++){            // 대각선 확인 
