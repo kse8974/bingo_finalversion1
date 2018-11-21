@@ -107,7 +107,7 @@ void print_bingo(int arr[N][N]){    // 빙고판 출력하는 함수
 
    for(y=0; y<N; y++){
       for(x=0; x<N; x++){
-         if(arr[y][x] != 0){         //거의 대부분 그냥 출력 
+         if(arr[y][x] != 0){         //대부분 그냥 출력 
             printf("%4d ", arr[y][x]);
          }
          else{                     //에러가 발생한 경우 //여기서 에러가 발생한 경우 외에 체크 된 경우에 마킹 출력됨
@@ -166,12 +166,18 @@ int get_number_byCo(int frc){			//컴퓨터가 입력하는 빙고 숫자
  int number2;
  int retry;
  int cnt;
- int arr[25]={1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25};
+ int ar[N*N];
+ int i;
+ 
+ for(i=0; i<N*N; i++) {
+ 	ar[i] = i+1;
+ }
+
 do{
  retry = 0;
  if(frc == 1) {
  srand((unsigned int)time(NULL));          
- number2 = arr[rand()%N*N];
+ number2 = ar[rand() %(N*N)];
  for(cnt=0; cnt<N*N; cnt++){
  	if(number2 == stored[cnt]){
  		printf("OVERLAPPED \n");
