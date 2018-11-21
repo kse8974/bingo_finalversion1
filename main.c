@@ -16,14 +16,15 @@ int c_count_bingo(int arr[N][N]);
 void print_winner(int winner);
  
  
-int stored[N*N]; 				// number1과 number2값을 저장해줄 배 열 
+int stored[N*N]; 				// number1과 number2값을 저장해줄 배열 
+int overlap = 0;
 
 int ubingo[N][N];               //사용자의 빙고판 = 전역변수    
 int cbingo[N][N];               //컴퓨터의 빙고판 
 
 void main() {
    int number1, number2, uwin, cwin;
-   int try_count;
+   int try_count=0;
    int i=0;
    
    initialize();         //빙고판 초기화
@@ -36,18 +37,16 @@ void main() {
       number2 = get_number_byCo(1);   		//컴퓨터의 번호 선택
      
 	 /* number1, number2 값을 저장하는 배열을 만들고 싶었음. 배열에는 순서대로 number1,2 값 저장
-	 저장한 후 다음 number1, number2와 비교하여 같은 수가 없으면 filled_bingo함수 실행
+	 저장한 후 다음 number1, number2와 비교하여 같은 수가 없으면 filled_bingo함수 실행*/
 	 
-      stored[2i] = number1;   				//짝수칸에 number1 값 넣기 
-      stored[2i+1] = number2;   			//홀수칸에 number2 값 넣기 순서상관없이 
+      stored[2*i] = number1;   				//짝수칸에 number1 값 넣기 
+      stored[2*i+1] = number2;   			//홀수칸에 number2 값 넣기 순서상관없이 
 	  
-	  i++;
-	  
-	  */
+	  overlap++;
 	  
 	  try_count++;
       
-      if(number1 != number2){				//number1과 number2가 다를 경우 빙고 -1로 채우
+      if(number1 != number2){				//number1과 number2가 다를 경우 빙고 -1로 채우기 
       filled_bingo(ubingo, number1);
       filled_bingo(cbingo, number1);
       
@@ -134,19 +133,29 @@ void filled_bingo(int arr[N][N], int number){     //입력받은 number과 같은 수를 
 int get_number_byMe(int frm){					// 내가 입력하는 빙고 숫자
  int number1;
  int retry;
-
+ int cnt;
+ 
 do{
     retry=0;
    if(frm == 0) {       // 0:나
      printf(">>1~%d 사이의 숫자를 입력하세요: ", N*N);
      scanf("%d", &number1);
+     
+     for(cnt=0; cnt<N*N; cnt++){
+     	if(number1 == stored[cnt]){
+     		printf("이미 고른 숫자입니다.\n");
+     		
+     		get_number_byMe(0);
+		 }
+	 }
+     
      if(number1<1 || number1>N*N){     //retry=1이면 입력에러
      retry=1;
      }
      else{
     retry=0;
      }
- }
+    }
 } while(retry ==1);        //retry=1이면 다시 입력해야하므로 do구문으로 돌아감
 
  printf(">사용자가 '%d'를 선택했습니다. \n", number1);
@@ -156,11 +165,20 @@ do{
 int get_number_byCo(int frc){			//컴퓨터가 입력하는 빙고 숫자
  int number2;
  int retry;
-
+ int cnt;
+ int arr[25]={1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25};
 do{
  retry = 0;
- if(frc == 1) {          
- number2 = rand() %N*N +1;
+ if(frc == 1) {
+ srand((unsigned int)time(NULL));          
+ number2 = arr[rand()%N*N];
+ for(cnt=0; cnt<N*N; cnt++){
+ 	if(number2 == stored[cnt]){
+ 		printf("OVERLAPPED \n");
+ 		get_number_byCo(1);
+	 }
+ }
+ 
  if(number2<1 || number2>N*N){ 			    //retry=1이면 입력에러
     retry=1;
   }
@@ -172,6 +190,7 @@ do{
 
  printf(">컴퓨터가 '%d'를 선택했습니다. \n", number2);
  return number2;
+
 }
 
 
